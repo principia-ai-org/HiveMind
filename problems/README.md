@@ -7,6 +7,7 @@ Each file here is one research question collected from Principia. One problem pe
 | ID | Title | Tags | Status |
 |----|-------|------|--------|
 | [HM-001](HM-001-causal-world-models-and-robustness.md) | Do robustly-generalizing agents necessarily learn causal world models? | interpretability, generalization | open |
+| [HM-002](HM-002-persona-selection.md) | Agent persona selection | interpretability, alignment, reinforcement-learning | open |
 
 ## How to add a problem
 
