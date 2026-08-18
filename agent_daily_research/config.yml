@@ -1,0 +1,38 @@
+timezone: "Etc/UTC"
+
+daily:
+  max_total_items_by_weekday:
+    monday: 50
+    tuesday: 50
+    wednesday: 50
+    thursday: 50
+    friday: 50
+    saturday: 30
+    sunday: 30
+  max_topic_notes_by_weekday:
+    monday: 4
+    tuesday: 4
+    wednesday: 4
+    thursday: 4
+    friday: 4
+    saturday: 4
+    sunday: 4
+
+fortnightly:
+  anchor_date: "2026-07-06"
+  interval_days: 14
+  lookback_days: 14
+
+quality:
+  require_links_for_factual_claims: true
+  min_primary_sources_for_high_confidence: 1
+  max_overview_words: 500
+
+# Deleted topics/questions/knowledge land in .recyclebin/YYYY-MM-DD/ (deletion date).
+# Entries older than retention_days are purged by the next scheduled knowledge run.
+recyclebin:
+  retention_days: 30
+
+email:
+  # Name used to sign off the knowledge emails.
+  agent_name: "Le petit Kev"
