@@ -1,5 +1,0 @@
-# Example prompts
-
-```
-    /update-topics "Remove the topic 'institutional strategy'. For all topics below, unless otherwise specified, make the maximum items 5. For each topic, make their weights the same every day. Lower the weight for "AI Research and Tooling" to 5. Add 'AI for maths' with weight 4, with a description that emphasises on probability, statistics, optimisation, applied mathematics and machine learning. Add  'Local and cloud LLM infra', with a description that gives some preference to cost-efficient ways of inference and fine-tuning, as well as understanding security / software compatibility / speed (e.g. quantization, memory) issues, and with a max item of 3. Add 'Code Translation' with weight 7, with a description that focuses both on market demands and technical progress. Add 'RL Environment' with weight 4, with a description.that emphases on the judging / grading criteria in RL environment and the kind of tasks focused on. The focus is both on market demands and technical progress."
-```

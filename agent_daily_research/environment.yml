@@ -1,9 +1,0 @@
-name: agent_daily_research
-channels:
-  - conda-forge
-dependencies:
-  - python=3.11
-  - pyyaml
-  - pytest
-  - flask
-  - markdown
