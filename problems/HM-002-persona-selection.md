@@ -1,6 +1,6 @@
 # Agent persona selection
 
-*HM-NEXT · status: open · tags: <auto> · added: YYYY-MM-DD*
+*HM-002 · status: open · tags: <auto> · added: 2026-08-18*
 
 <!-- The ID, date, and tags in the line above are placeholders filled in automatically
      when your PR is processed: the ID becomes the next free number (and the file is
