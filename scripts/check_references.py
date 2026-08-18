@@ -3,7 +3,8 @@
 
 Checks, from the repository root:
   1. Every reference linked from a problem (`../references/<key>.md`) exists.
-  2. Every references/*.md has a title (H1), an *Authors:* line, a *Link:* line,
+  2. No problem still has an unconverted numbered reference (`[N] <url>`).
+  3. Every references/*.md has a title (H1), an *Authors:* line, a *Link:* line,
      and a non-empty `## Summary` section.
 It also warns (without failing) about reference files that no problem cites.
 
@@ -20,6 +21,8 @@ REFERENCES = ROOT / "references"
 
 # Markdown link whose target is ../references/<key>.md
 REF_LINK = re.compile(r"\]\(\.\./references/([^)]+?)\.md\)")
+# An unconverted numbered reference entry, e.g. "[1] https://..."
+NUMBERED_REF = re.compile(r"^\[\d+\]\s+\S", re.MULTILINE)
 
 SKIP = {"README", "TEMPLATE"}
 
@@ -47,6 +50,16 @@ def check_links(errors):
     return cited
 
 
+def check_converted(errors):
+    """Numbered citations must have been converted to author-year links on PR."""
+    for prob in problem_files():
+        if NUMBERED_REF.search(prob.read_text(encoding="utf-8")):
+            errors.append(
+                f"{prob.relative_to(ROOT)}: has an unconverted numbered reference "
+                f"(`[N] <url>`); the PR pipeline converts these to author-year links"
+            )
+
+
 def check_reference_format(errors):
     """Each reference file must have title, Authors, Link, and a non-empty Summary."""
     for ref in reference_files():
@@ -72,6 +85,7 @@ def warn_orphans(cited):
 def main():
     errors = []
     cited = check_links(errors)
+    check_converted(errors)
     check_reference_format(errors)
     warn_orphans(cited)
 

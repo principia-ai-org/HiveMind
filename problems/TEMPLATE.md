@@ -10,12 +10,12 @@
      the ID is always assigned automatically. See problems/README.md for how to name the
      file. -->
 
-
 ## Problem statement
 
 <State the research question precisely. What is unknown? What would a solution look
-like? Cite prior work inline with the reference-key syntax, e.g.
-[[firstauthor2024]](../references/firstauthor2024.md).>
+like? Cite prior work with bracketed numbers that match the References list below — a
+single source [1], or several grouped together [2, 3]. When your PR is processed these
+numbers are converted automatically into author-year links.>
 
 ## Potential resources
 
@@ -24,7 +24,9 @@ could help. Bullet points are fine.>
 
 ## References
 
-<One line per cited paper. Use the same key you used inline. The reference file itself is
-generated automatically — you only need to add the link here (arXiv/DOI/URL is enough).>
+<One line per cited paper: its bracketed number and a link (arXiv / DOI / URL). You do
+NOT need the author, title, or year — those, and the author-year links in the text, are
+generated automatically when your PR is processed.>
 
-- [[firstauthor2024]](../references/firstauthor2024.md) — Author(s), *Title*, Venue Year. <link>
+[1] <link>
+[2] <link>
