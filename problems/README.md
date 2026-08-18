@@ -17,9 +17,11 @@ Each file here is one research question collected from Principia. One problem pe
 2. Fill in the title, `## Problem statement`, and `## Potential resources`. Leave the
    `added: YYYY-MM-DD` and `tags: <auto>` placeholders alone — the date is stamped and
    the tags are assigned automatically when your PR is processed (see [tags](#tags)).
-3. Cite papers inline with the key syntax `[[firstauthor2024]](../references/firstauthor2024.md)`
-   and list each one under `## References` with a link (arXiv / DOI / URL). See
-   [reference keys](#reference-keys) below.
+3. Cite papers inline with bracketed numbers — `[1]`, or grouped `[2, 3]` — and under
+   `## References` list each number with just a link: `[1] <url>` (arXiv / DOI / URL). You
+   don't write authors, titles, or years: when your PR is processed the numbers are
+   converted to author-year links `[[firstauthor2024]](../references/firstauthor2024.md)`,
+   the list is rewritten, and the summaries are generated. See [reference keys](#reference-keys).
 4. Open a pull request. **You do not need to write the paper summaries, pick the ID, or
    update this index** — when your PR touches a problem file, an automated job assigns the
    ID, stamps the date, assigns tags, generates the missing `references/*.md` summaries
@@ -28,10 +30,12 @@ Each file here is one research question collected from Principia. One problem pe
 
 ## Reference keys
 
-Keys are `firstauthor` + `year`, lowercase, no punctuation — e.g. Richens & Everitt 2024
-→ `richens2024`. If two papers collide (same first author and year), add a short
-disambiguator: `richens2024b` or a topic tag like `levine2025-mais`. Deterministic keys
-are what let the automation skip papers that already have a summary.
+The author-year links the pipeline produces use a key that is `firstauthor` + `year`,
+lowercase, no punctuation — e.g. Richens & Everitt 2024 → `richens2024`. If two papers
+collide (same first author and year), it adds a short disambiguator: `richens2024b` or a
+topic tag like `levine2025-mais`. Deterministic keys are what let the automation skip
+papers that already have a summary. You don't pick keys yourself — you just give the
+numbered links.
 
 ## Tags
 

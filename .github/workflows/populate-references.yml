@@ -12,6 +12,7 @@ on:
 permissions:
   contents: write
   pull-requests: read
+  id-token: write   # required by anthropics/claude-code-action for OIDC token exchange
 
 jobs:
   populate:
@@ -80,15 +81,19 @@ jobs:
             files (IDs and dates are already assigned; do not change them):
             ${{ steps.normalize.outputs.files }}
 
-            That means: assign tags from problems/TAGS.md if the problem's tags are the
-            `<auto>` placeholder, generate reference summaries for any cited paper that
-            lacks one, and make sure each problem has a correct row in the
-            problems/README.md index and each new reference a row in
-            references/README.md. Only touch the problem's `tags:` field (not its prose),
-            files under references/, and the two index tables. Do NOT commit or push —
-            leave changes in the working tree and make both
-            `python3 scripts/check_references.py` and `python3 scripts/check_problems.py`
-            pass.
+            That means, following docs/problem-processing.md:
+            - assign tags from problems/TAGS.md if the tags are the `<auto>` placeholder;
+            - resolve the numbered references (each `[N] <url>` line under `## References`),
+              generate a summary file for any cited paper that lacks one, convert the
+              inline numeric citations (`[1]`, `[2, 3]`) into author-year links
+              `[[key]](../references/key.md)`, and rewrite the `## References` list into
+              keyed bullets (no numbered markers should remain);
+            - keep the problems/README.md and references/README.md index tables correct.
+            Do not change the substance of the problem statement or resources — only the
+            `tags:` field, the citation markers and reference list, files under
+            references/, and the two index tables. Do NOT commit or push — leave changes
+            in the working tree and make both `python3 scripts/check_references.py` and
+            `python3 scripts/check_problems.py` pass.
           claude_args: |
             --allowedTools Read,Write,Edit,Glob,Grep,WebFetch,Bash
 

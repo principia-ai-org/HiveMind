@@ -64,9 +64,10 @@ This repo collects research questions (`problems/`) and paper summaries (`refere
 - **Problems** live in `problems/HM-NNN-<slug>.md`. `HM-NNN` is a permanent ID assigned
   automatically (a new problem is filed as `HM-NEXT-<slug>.md`; CI renames it to the next
   free number). Keep an assigned ID stable even if the title changes. Follow
-  `problems/TEMPLATE.md`. Cite papers inline as
-  `[[firstauthor2024]](../references/firstauthor2024.md)` and list them under
-  `## References` with a link.
+  `problems/TEMPLATE.md`. Problems are authored with numbered citations (`[1]`, `[2, 3]`)
+  and a `## References` list of `[N] <url>` lines; the pipeline converts these into inline
+  author-year links `[[firstauthor2024]](../references/firstauthor2024.md)` and keyed
+  reference bullets. The committed form uses the keyed links.
 - **Tags** are a controlled vocabulary in `problems/TAGS.md`. Only use tags from that
   file; never invent one on a problem. If a genuinely new tag is needed, add it to
   `problems/TAGS.md` in the same change. The `<auto>` placeholder means "assign tags from
@@ -76,9 +77,10 @@ This repo collects research questions (`problems/`) and paper summaries (`refere
   `references/TEMPLATE.md`: title, `*Authors:*`, `*Link:*`, `## Summary`. Summaries are
   faithful compressions checked against the source — never fabricate; if a source can't
   be retrieved, say so rather than inventing one.
-- When asked to process a problem (assign tags, populate references), follow
-  `docs/problem-processing.md` exactly (tag rule, key rule, dedup against existing files,
-  template, index updates), then run `python3 scripts/check_references.py` and
-  `python3 scripts/check_problems.py` until both pass.
+- When asked to process a problem (assign tags, convert numbered citations, populate
+  references), follow `docs/problem-processing.md` exactly (tag rule, citation-conversion
+  rule, key rule, dedup against existing files, template, index updates), then run
+  `python3 scripts/check_references.py` and `python3 scripts/check_problems.py` until both
+  pass.
 - Keep `problems/README.md` and `references/README.md` index tables in sync when adding
   files.

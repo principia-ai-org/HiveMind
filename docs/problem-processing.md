@@ -1,8 +1,8 @@
 # Problem processing procedure
 
 This is the canonical procedure for processing a problem file after it is added or
-changed: stamping its date, assigning its tags, and generating summaries for the papers
-it cites. The CI workflow
+changed: stamping its date, assigning its tags, converting its numbered citations into
+author-year links, and generating summaries for the papers it cites. The CI workflow
 ([`.github/workflows/populate-references.yml`](../.github/workflows/populate-references.yml))
 runs it; anyone can also follow it by hand. Keep this file as the single source of truth —
 the workflow prompt should stay a thin pointer to it.
@@ -32,32 +32,47 @@ already set real tags, leave them; if any of their tags is not in `TAGS.md`, tha
 validation failure they must resolve — do not silently invent a new tag. Never add a tag
 that is not in `TAGS.md`.
 
-## 3. References
+## 3. Citations and references
 
-1. **Collect citations.** In each changed problem file, find every reference link of the
-   form `[[<key>]](../references/<key>.md)` (inline and in the `## References` list)
-   together with the paper URL given in the `## References` list.
+Problems are authored with **numbered** citations: inline markers like `[1]`, `[2, 3]`,
+and a `## References` list of `[N] <url>` lines (URL only — no author/title/year). Convert
+these into the repository's author-year form and generate the summaries.
 
-2. **Compute the key** for each cited paper and confirm it matches the `<key>` used in the
-   link. The key is `firstauthor` + `year`, lowercase, punctuation stripped — e.g. Richens
-   & Everitt 2024 → `richens2024`. For same-first-author + same-year collisions, append a
-   short disambiguator: `richens2024b`, or a topic tag such as `levine2025-mais`. If a
-   link's key doesn't match the paper, prefer fixing the problem file's key over inventing
-   a mismatched reference filename.
+1. **Parse the numbered list.** Read each `[N] <url>` entry under `## References` to build
+   a map from citation number to URL.
+
+2. **Compute the key** for each URL. The key is `firstauthor` + `year`, lowercase,
+   punctuation stripped — e.g. Richens & Everitt 2024 → `richens2024`. For
+   same-first-author + same-year collisions, append a short disambiguator: `richens2024b`,
+   or a topic tag such as `levine2025-mais`. (Determining the author and year requires
+   fetching the source — see step 4.)
 
 3. **Deduplicate.** Skip any key that already has a `references/<key>.md` file. Only
    generate summaries for missing ones. This keeps the job idempotent.
 
 4. **Fetch and summarize** each missing paper. Retrieve the real title, author list, and
-   abstract from the given link (arXiv, DOI, or publisher page). Write
-   `references/<key>.md` following [`../references/TEMPLATE.md`](../references/TEMPLATE.md):
-   `# <title>`, an `*Authors:*` line, a `*Link:*` line, and a `## Summary` section.
+   abstract from its URL (arXiv, DOI, or publisher/blog page). Write `references/<key>.md`
+   following [`../references/TEMPLATE.md`](../references/TEMPLATE.md): `# <title>`, an
+   `*Authors:*` line, a `*Link:*` line, and a `## Summary` section.
 
    The summary must be a **faithful compression checked against the source** — the
    problem, method, key result(s), and why it matters for the citing problem. It is a
    summary, not an endorsement or review. **Never fabricate.** If the source can't be
    retrieved, do not invent a summary: leave the reference file out and note the failure
    in the run output so a human can add it. (Fail visibly, never fabricate.)
+
+5. **Rewrite the citations in place.** In the problem body, replace every inline numeric
+   marker with the corresponding author-year link(s): `[1]` → `[[key]](../references/key.md)`,
+   and a group `[2, 3]` → `[[key2]](../references/key2.md), [[key3]](../references/key3.md)`.
+   Then rewrite the `## References` list from `[N] <url>` lines into keyed bullets, one per
+   cited paper in ascending order:
+
+   ```
+   - [[key]](../references/key.md) — Author(s), *Title*, Venue Year. <url>
+   ```
+
+   No numbered markers or bare `[N] <url>` lines should remain. Do not otherwise alter the
+   problem's prose.
 
 ## 4. Update indexes
 
@@ -76,6 +91,7 @@ python3 scripts/check_problems.py
 
 ## Output
 
-New/updated files staged for commit: the tag assignment on the problem, `references/<key>.md`
-for each previously-missing citation, and index updates. In CI these are committed to the
-pull request branch so the author and reviewer see everything in the same diff.
+New/updated files staged for commit: the tag assignment and converted citations on the
+problem, `references/<key>.md` for each previously-missing citation, and index updates. In
+CI these are committed to the pull request branch so the author and reviewer see
+everything in the same diff.
