@@ -80,25 +80,35 @@ jobs:
           # token exchange (we do our own commit/push in a later step).
           github_token: ${{ github.token }}
           prompt: |
-            Follow the procedure in docs/problem-processing.md for these changed problem
-            files (IDs and dates are already assigned; do not change them):
+            Finish these problem PR file(s) (IDs and dates are already assigned — do NOT
+            change them), following docs/problem-processing.md:
             ${{ steps.normalize.outputs.files }}
 
-            That means, following docs/problem-processing.md:
-            - assign tags from problems/TAGS.md if the tags are the `<auto>` placeholder;
-            - resolve the numbered references (each `[N] <url>` line under `## References`),
-              generate a summary file for any cited paper that lacks one, convert the
-              inline numeric citations (`[1]`, `[2, 3]`) into author-year links
-              `[[key]](../references/key.md)`, and rewrite the `## References` list into
-              keyed bullets (no numbered markers should remain);
-            - keep the problems/README.md and references/README.md index tables correct.
-            Do not change the substance of the problem statement or resources — only the
-            `tags:` field, the citation markers and reference list, files under
-            references/, and the two index tables. Do NOT commit or push — leave changes
-            in the working tree and make both `python3 scripts/check_references.py` and
-            `python3 scripts/check_problems.py` pass.
+            Do ALL of the following, in order:
+            1. Tags: if the `tags:` field is `<auto>`, replace it with 1-3 tags taken only
+               from problems/TAGS.md that fit the problem.
+            2. Reference files: the `## References` section is a numbered list of
+               `[N] <url>` lines. For each URL, determine the paper's firstauthor+year key
+               (e.g. richens2024); if references/<key>.md does not already exist, fetch the
+               source and write it per references/TEMPLATE.md (title, `*Authors:*`,
+               `*Link:*`, `## Summary`). Summaries must be faithful — never fabricate; if a
+               URL truly cannot be retrieved, say so in your final message.
+            3. Convert citations IN THE PROBLEM FILE (this is the step most easily missed —
+               do not skip it): replace every inline numeric marker (`[1]`, `[2, 3]`, …)
+               with the matching author-year link(s) `[[key]](../references/key.md)`
+               (comma-separate groups), and rewrite the `## References` list into keyed
+               bullets `- [[key]](../references/key.md) — Author(s), *Title*, Venue Year. <url>`.
+               NO `[N]` markers or bare `[N] <url>` lines may remain anywhere.
+            4. Update the index tables in problems/README.md and references/README.md.
+            5. Definition of done: run `python3 scripts/check_references.py` AND
+               `python3 scripts/check_problems.py`, fix whatever they report, and repeat
+               until BOTH print "OK". Do not finish while either still errors.
+
+            Do not change the substance of the problem statement or resources. Do NOT
+            commit or push — just leave the changes in the working tree.
           claude_args: |
             --allowedTools Read,Write,Edit,Glob,Grep,WebFetch,Bash
+            --max-turns 60
 
       - name: Commit generated changes to the PR branch
         if: steps.changed.outputs.any == 'true'

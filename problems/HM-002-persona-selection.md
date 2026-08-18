@@ -24,7 +24,7 @@ could help. Bullet points are fine.>
 ## References
 
 [1] https://alignment.anthropic.com/2026/psm/
-[2] https://openreview.net/challenge?redirect=%2Fforum%3Fid%3DRdJVFCHjUMI
+[2] https://arxiv.org/abs/2111.02080
 [3] https://arxiv.org/abs/2507.21509
 [4] https://www-cdn.anthropic.com/af5633c94ed2beb282f6a53c595eb437e8e7b630/Many_Shot_Jailbreaking__2024_04_02_0936.pdf
 [5] https://arxiv.org/abs/2306.10404
