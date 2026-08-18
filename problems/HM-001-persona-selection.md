@@ -1,6 +1,6 @@
 # Agent persona selection
 
-*HM-002 · status: open · tags: interpretability, alignment, reinforcement-learning · added: 2026-08-18*
+*HM-001 · status: open · tags: interpretability, alignment, reinforcement-learning · added: 2026-08-18*
 
 <!-- The ID, date, and tags in the line above are placeholders filled in automatically
      when your PR is processed: the ID becomes the next free number (and the file is

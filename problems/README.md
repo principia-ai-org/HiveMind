@@ -6,15 +6,13 @@ Each file here is one research question collected from Principia. One problem pe
 
 | ID | Title | Tags | Status |
 |----|-------|------|--------|
-| [HM-001](HM-001-causal-world-models-and-robustness.md) | Do robustly-generalizing agents necessarily learn causal world models? | interpretability, generalization | open |
-| [HM-002](HM-002-persona-selection.md) | Agent persona selection | interpretability, alignment, reinforcement-learning | open |
-| [HM-003](HM-003-persona-selection.md) | Agent persona selection | interpretability, alignment, reinforcement-learning | open |
+| [HM-001](HM-001-persona-selection.md) | Agent persona selection | interpretability, alignment, reinforcement-learning | open |
 
 ## How to add a problem
 
 1. Copy [`TEMPLATE.md`](TEMPLATE.md) to `HM-NEXT-<short-slug>.md`, where `<short-slug>` is
    a few hyphenated words from the title. Leave the `HM-NEXT` prefix as-is: it becomes the
-   next free permanent ID (`HM-007`, …) when your PR is processed, and the file is renamed
+   next free permanent ID (`HM-002`, …) when your PR is processed, and the file is renamed
    to match. The ID stays stable even if the title changes later.
 2. Fill in the title, `## Problem statement`, and `## Potential resources`. Leave the
    `added: YYYY-MM-DD` and `tags: <auto>` placeholders alone — the date is stamped and
