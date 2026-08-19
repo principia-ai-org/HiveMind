@@ -46,15 +46,3 @@ real reference manager. The sync is **one-way** (repo → Zotero).
 
 Script: [`scripts/sync_zotero.py`](scripts/sync_zotero.py) · workflow:
 [`.github/workflows/sync-zotero.yml`](.github/workflows/sync-zotero.yml).
-
-## Setup (one-time, maintainer)
-
-The Actions need three repository secrets (Settings → Secrets and variables → **Actions**):
-
-- `CLAUDE_CODE_OAUTH_TOKEN` — for the reference/tag generation. Mint with
-  `claude setup-token` on a Claude subscription account.
-- `ZOTERO_API_KEY` — a Zotero key with **write** access to the group
-  ([zotero.org/settings/keys](https://www.zotero.org/settings/keys)).
-- `ZOTERO_GROUP_ID` — the numeric id of the target group (from its
-  `zotero.org/groups/<id>/…` URL). The `HiveMind` collection must exist in that group;
-  set the `ZOTERO_COLLECTION` env/variable to change which collection is used.
