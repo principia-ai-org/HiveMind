@@ -90,13 +90,13 @@ def build_item(ref, collection_key=None):
     return {**base, "itemType": "webpage"}
 
 
-def request(method, path, key, params=None, data=None):
+def request(method, path, key, params=None, data=None, extra_headers=None):
     url = f"{API}{path}"
     if params:
         url += "?" + urllib.parse.urlencode(params)
     body = json.dumps(data).encode() if data is not None else None
-    req = urllib.request.Request(url, data=body, method=method,
-                                 headers={**HEADERS, "Zotero-API-Key": key})
+    hdrs = {**HEADERS, "Zotero-API-Key": key, **(extra_headers or {})}
+    req = urllib.request.Request(url, data=body, method=method, headers=hdrs)
     with urllib.request.urlopen(req) as resp:
         raw = resp.read().decode()
         return resp.status, (json.loads(raw) if raw else None)
@@ -111,23 +111,44 @@ def resolve_collection(gid, key, name):
     return None
 
 
-def find_existing(gid, key, refkey):
-    """Return (item_key, version) for an existing item tagged hm-ref:<refkey>, else None."""
+def find_all(gid, key, refkey):
+    """Return [(item_key, version), ...] for every item tagged hm-ref:<refkey>."""
     _, items = request("GET", f"/groups/{gid}/items", key,
-                        params={"tag": f"hm-ref:{refkey}", "limit": 1})
-    if items:
-        return items[0]["key"], items[0]["version"]
-    return None
+                        params={"tag": f"hm-ref:{refkey}", "limit": 50})
+    return [(it["key"], it["version"]) for it in (items or [])]
+
+
+def delete_item(gid, key, item_key, version):
+    request("DELETE", f"/groups/{gid}/items/{item_key}", key,
+            extra_headers={"If-Unmodified-Since-Version": str(version)})
+
+
+def audit(gid, key):
+    """Print every item tagged 'HiveMind' with its key, type, tags, and collections."""
+    _, items = request("GET", f"/groups/{gid}/items", key,
+                        params={"tag": "HiveMind", "limit": 100})
+    print(f"{len(items or [])} item(s) tagged 'HiveMind':")
+    for it in items or []:
+        d = it["data"]
+        tags = ",".join(t["tag"] for t in d.get("tags", []))
+        print(f"  {it['key']}  [{d.get('itemType')}]  cols={d.get('collections')}  "
+              f"tags=({tags})  {d.get('title','')[:60]}")
 
 
 def main():
-    args = [a for a in sys.argv[1:] if a != "--dry-run"]
+    flags = {"--dry-run", "--audit"}
+    args = [a for a in sys.argv[1:] if a not in flags]
     dry = "--dry-run" in sys.argv
+    do_audit = "--audit" in sys.argv
     api_key = os.environ.get("ZOTERO_API_KEY")
     gid = os.environ.get("ZOTERO_GROUP_ID")
     if not dry and (not api_key or not gid):
         print("error: set ZOTERO_API_KEY and ZOTERO_GROUP_ID (or use --dry-run)")
         return 1
+
+    if do_audit:
+        audit(gid, api_key)
+        return 0
 
     files = [pathlib.Path(a) for a in args] if args else \
         [p for p in sorted(REFERENCES.glob("*.md")) if p.stem not in SKIP]
@@ -149,20 +170,23 @@ def main():
             print(f"--- {ref['key']} ({item['itemType']}) -> collection {collection_name or '(top level)'} ---")
             print(json.dumps(item, indent=2, ensure_ascii=False))
             continue
-        existing = find_existing(gid, api_key, ref["key"])
-        if existing:
-            item_key, version = existing
-            item["key"], item["version"] = item_key, version
-            request("PUT", f"/groups/{gid}/items/{item_key}", api_key, data=item)
-            print(f"updated {ref['key']} -> {item_key}")
-        else:
+        matches = find_all(gid, api_key, ref["key"])
+        if not matches:
             _, resp = request("POST", f"/groups/{gid}/items", api_key, data=[item])
             failed = (resp or {}).get("failed") or {}
             if failed:
                 print(f"FAILED {ref['key']}: {failed}")
             else:
-                new_key = resp["successful"]["0"]["key"]
-                print(f"created {ref['key']} -> {new_key}")
+                print(f"created {ref['key']} -> {resp['successful']['0']['key']}")
+        else:
+            keep_key, keep_ver = matches[0]
+            item["key"], item["version"] = keep_key, keep_ver
+            request("PUT", f"/groups/{gid}/items/{keep_key}", api_key, data=item)
+            extras = matches[1:]
+            for dup_key, dup_ver in extras:
+                delete_item(gid, api_key, dup_key, dup_ver)
+            note = f" (removed {len(extras)} duplicate(s))" if extras else ""
+            print(f"updated {ref['key']} -> {keep_key}{note}")
     return 0
 
 
