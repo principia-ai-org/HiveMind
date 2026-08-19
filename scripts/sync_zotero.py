@@ -97,9 +97,13 @@ def request(method, path, key, params=None, data=None, extra_headers=None):
     body = json.dumps(data).encode() if data is not None else None
     hdrs = {**HEADERS, "Zotero-API-Key": key, **(extra_headers or {})}
     req = urllib.request.Request(url, data=body, method=method, headers=hdrs)
-    with urllib.request.urlopen(req) as resp:
-        raw = resp.read().decode()
-        return resp.status, (json.loads(raw) if raw else None)
+    try:
+        with urllib.request.urlopen(req) as resp:
+            raw = resp.read().decode()
+            return resp.status, (json.loads(raw) if raw else None)
+    except urllib.error.HTTPError as e:
+        detail = e.read().decode(errors="replace")[:500]
+        raise RuntimeError(f"{method} {path} -> HTTP {e.code}: {detail}") from None
 
 
 def resolve_collection(gid, key, name):
@@ -180,8 +184,8 @@ def main():
                 print(f"created {ref['key']} -> {resp['successful']['0']['key']}")
         else:
             keep_key, keep_ver = matches[0]
-            item["key"], item["version"] = keep_key, keep_ver
-            request("PUT", f"/groups/{gid}/items/{keep_key}", api_key, data=item)
+            request("PATCH", f"/groups/{gid}/items/{keep_key}", api_key, data=item,
+                    extra_headers={"If-Unmodified-Since-Version": str(keep_ver)})
             extras = matches[1:]
             for dup_key, dup_ver in extras:
                 delete_item(gid, api_key, dup_key, dup_ver)
