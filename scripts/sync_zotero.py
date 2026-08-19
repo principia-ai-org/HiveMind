@@ -6,8 +6,10 @@ Each reference file becomes one Zotero item. Items are matched by a hidden tag
 item instead of creating duplicates — no local state file needed.
 
 Environment:
-  ZOTERO_API_KEY   API key with write access to the group
-  ZOTERO_GROUP_ID  numeric group id
+  ZOTERO_API_KEY    API key with write access to the group
+  ZOTERO_GROUP_ID   numeric group id
+  ZOTERO_COLLECTION collection (folder) name to file items under (default "HiveMind";
+                    set empty to sync to the group's top level)
 
 Usage:
   python3 scripts/sync_zotero.py [--dry-run] [file ...]
@@ -64,7 +66,7 @@ def creators(authors):
     return out
 
 
-def build_item(ref):
+def build_item(ref, collection_key=None):
     year = re.search(r"(\d{4})", ref["key"])
     link = ref["link"]
     extra = f"HiveMind summary:\n{ref['summary']}" if ref["summary"] else ""
@@ -76,6 +78,7 @@ def build_item(ref):
         "url": link,
         "extra": extra,
         "tags": tags,
+        "collections": [collection_key] if collection_key else [],
     }
     if "arxiv.org" in link:
         m = re.search(r"arxiv\.org/abs/([\w.\-/]+)", link)
@@ -99,6 +102,15 @@ def request(method, path, key, params=None, data=None):
         return resp.status, (json.loads(raw) if raw else None)
 
 
+def resolve_collection(gid, key, name):
+    """Return the collection key for a collection named `name` in the group, else None."""
+    _, cols = request("GET", f"/groups/{gid}/collections", key, params={"limit": 100})
+    for c in cols or []:
+        if c["data"]["name"].strip().lower() == name.strip().lower():
+            return c["key"]
+    return None
+
+
 def find_existing(gid, key, refkey):
     """Return (item_key, version) for an existing item tagged hm-ref:<refkey>, else None."""
     _, items = request("GET", f"/groups/{gid}/items", key,
@@ -120,11 +132,21 @@ def main():
     files = [pathlib.Path(a) for a in args] if args else \
         [p for p in sorted(REFERENCES.glob("*.md")) if p.stem not in SKIP]
 
+    collection_name = os.environ.get("ZOTERO_COLLECTION", "HiveMind")
+    collection_key = None
+    if not dry and collection_name:
+        collection_key = resolve_collection(gid, api_key, collection_name)
+        if not collection_key:
+            print(f"error: no collection named {collection_name!r} in group {gid}. "
+                  f"Create it in Zotero, or set ZOTERO_COLLECTION='' to sync to the top level.")
+            return 1
+        print(f"filing references under collection {collection_name!r} ({collection_key})")
+
     for path in files:
         ref = parse_reference(path)
-        item = build_item(ref)
+        item = build_item(ref, collection_key)
         if dry:
-            print(f"--- {ref['key']} ({item['itemType']}) ---")
+            print(f"--- {ref['key']} ({item['itemType']}) -> collection {collection_name or '(top level)'} ---")
             print(json.dumps(item, indent=2, ensure_ascii=False))
             continue
         existing = find_existing(gid, api_key, ref["key"])
