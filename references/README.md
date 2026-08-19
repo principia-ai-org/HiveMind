@@ -14,6 +14,10 @@ any paper that doesn't already have one, and commits it here. See
 [`docs/problem-processing.md`](../docs/problem-processing.md) for the exact procedure
 and [`TEMPLATE.md`](TEMPLATE.md) for the format.
 
+Once a reference lands on `main`, it is also mirrored into the Zotero group library (under
+the `HiveMind` collection) — one-way, repo → Zotero. See the Zotero integration section in
+the [top-level README](../README.md#zotero-integration).
+
 ## Naming
 
 Files are keyed `firstauthor` + `year`, lowercase — e.g. `richens2024.md`. Same-author,
