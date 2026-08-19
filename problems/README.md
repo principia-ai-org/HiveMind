@@ -18,7 +18,7 @@ Each file here is one research question collected from Principia. One problem pe
    `added: YYYY-MM-DD` and `tags: <auto>` placeholders alone — the date is stamped and
    the tags are assigned automatically when your PR is processed (see [tags](#tags)).
 3. Cite papers inline with bracketed numbers — `[1]`, or grouped `[2, 3]` — and under
-   `## References` list each number with just a link: `[1] <url>` (arXiv / DOI / URL). You
+   `## References` list each number with just a link: `[1] <url>` (arXiv / DOI / URL). **Not all source links were tested if they could be merged. For example, the links from `openreview` doesn't work!** You
    don't write authors, titles, or years: when your PR is processed the numbers are
    converted to author-year links `[[firstauthor2024]](../references/firstauthor2024.md)`,
    the list is rewritten, and the summaries are generated. See [reference keys](#reference-keys).
@@ -32,8 +32,7 @@ Each file here is one research question collected from Principia. One problem pe
 
 The author-year links the pipeline produces use a key that is `firstauthor` + `year`,
 lowercase, no punctuation — e.g. Richens & Everitt 2024 → `richens2024`. If two papers
-collide (same first author and year), it adds a short disambiguator: `richens2024b` or a
-topic tag like `levine2025-mais`. Deterministic keys are what let the automation skip
+collide (same first author and year), it adds a short disambiguator: `richens2024b`. Deterministic keys are what let the automation skip
 papers that already have a summary. You don't pick keys yourself — you just give the
 numbered links.
 

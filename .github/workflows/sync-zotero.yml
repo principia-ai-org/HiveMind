@@ -1,0 +1,24 @@
+name: Sync references to Zotero
+# One-way sync: when a reference lands on main, upsert it into the Zotero group library.
+# Items are matched by a hidden `hm-ref:<key>` tag, so re-runs update rather than duplicate.
+# Requires repo secrets ZOTERO_API_KEY and ZOTERO_GROUP_ID (Settings → Secrets → Actions).
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'references/**.md'
+  workflow_dispatch:   # allow manual runs (syncs all references)
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Sync references into the Zotero group
+        env:
+          ZOTERO_API_KEY: ${{ secrets.ZOTERO_API_KEY }}
+          ZOTERO_GROUP_ID: ${{ secrets.ZOTERO_GROUP_ID }}
+        run: python3 scripts/sync_zotero.py
