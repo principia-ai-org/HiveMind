@@ -30,3 +30,7 @@ persona is active remains a tractable safety lever — while noting uncertainty 
 whether PSM fully explains all AI agentic behavior. This is the paper's central
 motivation for the citing problem's framing of "persona selection" as a mechanistic
 target for a toy model.
+
+## Cited by
+
+- [HM-001](../problems/HM-001-persona-selection.md)

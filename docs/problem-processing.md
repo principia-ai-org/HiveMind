@@ -74,13 +74,19 @@ these into the repository's author-year form and generate the summaries.
    No numbered markers or bare `[N] <url>` lines should remain. Do not otherwise alter the
    problem's prose.
 
-## 4. Update indexes
+## 4. Backlinks (handled by CI, not by Claude)
+
+After citations are converted, a deterministic step runs `scripts/update_backlinks.py`,
+which rewrites the `## Cited by` section of each `references/*.md` to list the problems
+that cite it. No action needed here — do not hand-edit `## Cited by`.
+
+## 5. Update indexes
 
 Add each new reference to the table in
 [`../references/README.md`](../references/README.md). If a new problem was added, add a row
 for it (using its now-assigned ID) to [`../problems/README.md`](../problems/README.md).
 
-## 5. Validate and loop
+## 6. Validate and loop
 
 Run both validators from the repo root and fix issues until they pass:
 

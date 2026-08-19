@@ -110,6 +110,10 @@ jobs:
             --allowedTools Read,Write,Edit,Glob,Grep,WebFetch,Bash
             --max-turns 60
 
+      - name: Update reference backlinks (Cited by)
+        if: steps.changed.outputs.any == 'true'
+        run: python3 scripts/update_backlinks.py
+
       - name: Commit generated changes to the PR branch
         if: steps.changed.outputs.any == 'true'
         run: |

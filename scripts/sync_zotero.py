@@ -40,7 +40,7 @@ def parse_reference(path):
     title = re.search(r"^#\s+(.+)$", text, re.MULTILINE)
     authors = re.search(r"^\*Authors:\*\s*(.+)$", text, re.MULTILINE)
     link = re.search(r"^\*Link:\*\s*(\S+)", text, re.MULTILINE)
-    summary = re.search(r"^##\s+Summary\s*$(.+)", text, re.MULTILINE | re.DOTALL)
+    summary = re.search(r"^##\s+Summary\s*\n(.*?)(?=\n##\s|\Z)", text, re.DOTALL)
     return {
         "key": path.stem,
         "title": title.group(1).strip() if title else path.stem,

@@ -26,3 +26,7 @@ governed by reward stringency. These predictions are validated empirically on Pr
 candidate toy-model framework — tractable, statistical-physics-style dynamics for
 policy learning — that could be adapted to model the developmental dynamics of persona
 selection during RLHF.
+
+## Cited by
+
+- [HM-001](../problems/HM-001-persona-selection.md)
