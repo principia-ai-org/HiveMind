@@ -7,6 +7,7 @@ Each file here is one research question collected from Principia. One problem pe
 | ID | Title | Tags | Status |
 |----|-------|------|--------|
 | [HM-001](HM-001-persona-selection.md) | Agent persona selection | interpretability, alignment, reinforcement-learning | open |
+| [HM-002](HM-002-what-defines-a-feature.md) | What defines a "feature"? Exploring interpretability | interpretability | open |
 
 ## How to add a problem
 
