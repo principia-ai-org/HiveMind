@@ -37,3 +37,9 @@ same-year collisions get a suffix (`richens2024b.md`) or topic tag (`levine2025-
 | [anil2024](anil2024.md) | Many-shot Jailbreaking |
 | [patel2023](patel2023.md) | The RL Perceptron: Generalisation Dynamics of Policy Learning in High Dimensions |
 | [lee2024](lee2024.md) | Why Do Animals Need Shaping? A Theory of Task Composition and Curriculum Learning |
+| [gromov2023](gromov2023.md) | Grokking modular arithmetic |
+| [meloux2025](meloux2025.md) | Everything, Everywhere, All at Once: Is Mechanistic Interpretability Identifiable? |
+| [furman2026](furman2026.md) | Benign Loss Landscapes Can Coexist with Worst-Case Hardness |
+| [grasedyck2010](grasedyck2010.md) | Hierarchical Singular Value Decomposition of Tensors |
+| [rumelhart1986](rumelhart1986.md) | Learning representations by back-propagating errors |
+| [park2024](park2024.md) | The Linear Representation Hypothesis and the Geometry of Large Language Models |

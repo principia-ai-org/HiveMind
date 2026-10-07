@@ -6,7 +6,7 @@
 
 What makes for a good feature in a neural network? This is a starting point for understanding what a “feature” means in different approaches to interpretability, rather than an attempt to settle on a universal definition. The aim is to identify desirable properties and compare examples until we can formulate more precise questions.
 
-Rumelhart, Hinton, and Williams [5] emphasize that back-propagation can learn internal representations of regularities in a task, rather than requiring those features to be specified beforehand. Their work motivates asking what structure training produces, and how that structure can be recognized as a feature.
+Rumelhart, Hinton, and Williams [[rumelhart1986]](../references/rumelhart1986.md) emphasize that back-propagation can learn internal representations of regularities in a task, rather than requiring those features to be specified beforehand. Their work motivates asking what structure training produces, and how that structure can be recognized as a feature.
 
 ### What properties should a feature have?
 
@@ -18,7 +18,7 @@ Rumelhart, Hinton, and Williams [5] emphasize that back-propagation can learn in
 
 **Coordinate invariance.** Should a feature be independent of the coordinates used to describe it? With fixed input and output inner products, the singular values and singular subspaces of a linear map are independent of the choice of orthonormal bases. Polynomial coefficients, by contrast, depend on the variables in which the polynomial is expanded. A separate question concerns the weights: should features be unchanged under reparametrizations that preserve the learned function?
 
-Park, Choe, and Veitch [6] formalize the hypothesis that concepts in a language model correspond to directions in its representation space. They define a *causal inner product* under which concepts that can be varied independently have orthogonal representations. This gives a concrete example of why identifying a direction is only part of the question: the inner product used to compare feature directions also needs justification.
+Park, Choe, and Veitch [[park2024]](../references/park2024.md) formalize the hypothesis that concepts in a language model correspond to directions in its representation space. They define a *causal inner product* under which concepts that can be varied independently have orthogonal representations. This gives a concrete example of why identifying a direction is only part of the question: the inner product used to compare feature directions also needs justification.
 
 ### From the DLN to the DQN
 
@@ -63,11 +63,11 @@ $$
 
 Factoring the polynomial identifies $q$. What makes $q$ a useful feature, and how should such features be recognized from the learned polynomial or weights?
 
-Gromov’s modular-arithmetic model [1] gives a task-dependent example. He obtains explicit feature maps with a Fourier structure in a network with quadratic activation, and finds corresponding structure in trained weights. The relation to modular arithmetic makes these features informative. Should the task help determine which structures we recognize as features?
+Gromov’s modular-arithmetic model [[gromov2023]](../references/gromov2023.md) gives a task-dependent example. He obtains explicit feature maps with a Fourier structure in a network with quadratic activation, and finds corresponding structure in trained weights. The relation to modular arithmetic makes these features informative. Should the task help determine which structures we recognize as features?
 
 #### An SVD for the learned polynomial
 
-Furman et al. [3] study tree tensor networks (TTNs), which extend matrix products to compositions of multilinear maps. A corresponding extension of the matrix SVD is the **hierarchical SVD** [4]. This suggests looking for polynomial features by decomposing the tensor of coefficients and translating its singular vectors back into functions of the input.
+Furman et al. [[furman2026]](../references/furman2026.md) study tree tensor networks (TTNs), which extend matrix products to compositions of multilinear maps. A corresponding extension of the matrix SVD is the **hierarchical SVD** [[grasedyck2010]](../references/grasedyck2010.md). This suggests looking for polynomial features by decomposing the tensor of coefficients and translating its singular vectors back into functions of the input.
 
 For $f=f_W$ of degree $m=2^L$, the symmetric coefficient tensor is
 
@@ -113,7 +113,7 @@ $$
 
 The $\lambda_j$ can have either sign; their absolute values are the singular values. Thus, for a quartic, this construction identifies quadratic polynomial features.
 
-In a hierarchical SVD, the groups of indices are split recursively along a tree [4]. The singular tensors are combined through the tree’s coefficients; evaluating every input slot at $x$ turns these contractions into sums and products of polynomial functions, ending at $f(x)$. Working with $C_f$ ensures that this decomposition concerns the learned polynomial itself.
+In a hierarchical SVD, the groups of indices are split recursively along a tree [[grasedyck2010]](../references/grasedyck2010.md). The singular tensors are combined through the tree’s coefficients; evaluating every input slot at $x$ turns these contractions into sums and products of polynomial functions, ending at $f(x)$. Working with $C_f$ ensures that this decomposition concerns the learned polynomial itself.
 
 An exact decomposition retains the same information as the polynomial coefficients, but displays it differently. Its interpretation depends on the chosen split or tree and on the inner product. **Which choices make these polynomial features informative, and what should distinguish one spectral interpretation from another?**
 
@@ -155,20 +155,14 @@ $$
 
 The pair $A$ records “$x$ but not $y$” and “$y$ but not $x$”; $B$ records “at least one” and “not both”. Both give the correct output on all four inputs. The weights, activations, and output rule remain unchanged. The ambiguity lies in which Boolean structure we recognize in that fixed computation.
 
-Méloux et al. [2] investigate this ambiguity in small networks computing Boolean functions. They find that a fixed circuit can admit several interpretations, and that several candidate algorithms can satisfy their tests for correspondence with a trained network.
+Méloux et al. [[meloux2025]](../references/meloux2025.md) investigate this ambiguity in small networks computing Boolean functions. They find that a fixed circuit can admit several interpretations, and that several candidate algorithms can satisfy their tests for correspondence with a trained network.
 
 For features, the question is how to distinguish a useful interpretation from an arbitrary reformulation. **Should the desired properties above identify a unique set of features, or can distinct interpretations of the same fixed network be equally informative?**
 
 ## References
-
-[1] https://arxiv.org/abs/2301.02679
-
-[2] https://arxiv.org/abs/2502.20914
-
-[3] https://arxiv.org/abs/2609.13057
-
-[4] https://doi.org/10.1137/090764189
-
-[5] https://doi.org/10.1038/323533a0
-
-[6] https://proceedings.mlr.press/v235/park24c.html
+- [[gromov2023]](../references/gromov2023.md) — Gromov, *Grokking modular arithmetic*, arXiv 2023. https://arxiv.org/abs/2301.02679
+- [[meloux2025]](../references/meloux2025.md) — Méloux, Maniu, Portet, Peyrard, *Everything, Everywhere, All at Once: Is Mechanistic Interpretability Identifiable?*, arXiv 2025. https://arxiv.org/abs/2502.20914
+- [[furman2026]](../references/furman2026.md) — Furman, Wäldchen, Bei, Hodgkinson, *Benign Loss Landscapes Can Coexist with Worst-Case Hardness*, arXiv 2026. https://arxiv.org/abs/2609.13057
+- [[grasedyck2010]](../references/grasedyck2010.md) — Grasedyck, *Hierarchical Singular Value Decomposition of Tensors*, SIAM J. Matrix Anal. Appl. 2010. https://doi.org/10.1137/090764189
+- [[rumelhart1986]](../references/rumelhart1986.md) — Rumelhart, Hinton, Williams, *Learning representations by back-propagating errors*, Nature 1986. https://doi.org/10.1038/323533a0
+- [[park2024]](../references/park2024.md) — Park, Choe, Veitch, *The Linear Representation Hypothesis and the Geometry of Large Language Models*, ICML 2024. https://proceedings.mlr.press/v235/park24c.html
